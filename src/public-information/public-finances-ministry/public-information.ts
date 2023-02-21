@@ -38,9 +38,9 @@ const publicInformation = {
         let items = document.querySelectorAll(querySelectorArg);
         items.forEach((item) => {
           results.push({
-            // url: (item.querySelector("span.title > a")! as any).href,
-            title: (item.querySelector("span.title > a > h6.truncate resource-title > strong")! as any).innerText,
-            // downloadUrl: (item.querySelector("a.secondary-content")! as any).href,
+            url: (item.querySelector("span.title > a")! as any).getAttribute("href"),
+            title: (item.querySelector("span.title > a > h6 > strong")! as any).innerText,
+            downloadUrl: (item.querySelector("a.waves-effect")! as any).getAttribute("href"),
           });
         });
         return results;
