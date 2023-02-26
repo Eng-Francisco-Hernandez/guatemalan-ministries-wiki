@@ -6,7 +6,7 @@ import { useState } from "react";
 import { NavbarLayoutProps } from "@/types/components";
 
 export default function NavbarLayout(props: NavbarLayoutProps) {
-  const { children } = props;
+  const { children, showHomeIcon = false } = props;
   const [searchValue, setSearchValue] = useState("");
   const onEnter = (e: any) => {
     if (e.key === "Enter") {
@@ -20,6 +20,7 @@ export default function NavbarLayout(props: NavbarLayoutProps) {
         searchValue={searchValue}
         onChangeSearchValue={(e) => setSearchValue(e.target.value)}
         onKeyDown={(e) => onEnter(e)}
+        showHomeIcon={showHomeIcon}
       />
       <Box className="main-layout" component="main">
         <Container maxWidth="lg">{children}</Container>

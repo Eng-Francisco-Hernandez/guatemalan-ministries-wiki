@@ -13,6 +13,7 @@ export default async function handler(
     case "GET":
       try {
         const publicItems = await publicFinancesMinistryClient.getPublicItems();
+        console.log(publicItems)
         res.status(200).json(publicItems);
       } catch (error) {
         res.status(400).json(error);

@@ -4,7 +4,6 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
@@ -12,6 +11,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Button } from "@mui/material";
 import { NavbarProps } from "@/types/components";
+import HomeIcon from "@mui/icons-material/Home";
+import { useRouter } from "next/router";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,13 +54,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar(props: NavbarProps) {
-  const { searchValue, onChangeSearchValue, onKeyDown } = props;
+  const {
+    searchValue,
+    onChangeSearchValue,
+    onKeyDown,
+    showHomeIcon = false,
+  } = props;
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const router = useRouter();
+
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleMobileMenuClose = () => {
@@ -88,10 +94,14 @@ export default function Navbar(props: NavbarProps) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <Button>Ministerio de Economía</Button>
+        <Button onClick={() => router.push("/mineco")}>
+          Ministerio de Economía
+        </Button>
       </MenuItem>
       <MenuItem>
-        <Button>Ministerio de Finanzas Públicas</Button>
+        <Button onClick={() => router.push("/minfin")}>
+          Ministerio de Finanzas Públicas
+        </Button>
       </MenuItem>
     </Menu>
   );
@@ -100,19 +110,6 @@ export default function Navbar(props: NavbarProps) {
     <>
       <AppBar component="nav">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          ></IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          ></Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -126,9 +123,22 @@ export default function Navbar(props: NavbarProps) {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
+          {showHomeIcon && (
+            <IconButton color="inherit" onClick={() => router.push("/home")}>
+              <HomeIcon />
+            </IconButton>
+          )}
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Button sx={{ color: "white" }}>Ministerio de Economía</Button>
-            <Button sx={{ color: "white" }}>
+            <Button
+              sx={{ color: "white" }}
+              onClick={() => router.push("/mineco")}
+            >
+              Ministerio de Economía
+            </Button>
+            <Button
+              sx={{ color: "white" }}
+              onClick={() => router.push("/minfin")}
+            >
               Ministerio de Finanzas Públicas
             </Button>
           </Box>

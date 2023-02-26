@@ -32,15 +32,20 @@ const publicInformation = {
     try {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      await page.goto(`${this.host}/${path}`);
+      await page.goto(`${this.host}/dataset/${path}`);
       let data = await page.evaluate((querySelectorArg) => {
         let results: any = [];
         let items = document.querySelectorAll(querySelectorArg);
         items.forEach((item) => {
           results.push({
-            url: (item.querySelector("span.title > a")! as any).getAttribute("href"),
-            title: (item.querySelector("span.title > a > h6 > strong")! as any).innerText,
-            downloadUrl: (item.querySelector("a.waves-effect")! as any).getAttribute("href"),
+            url: (item.querySelector("span.title > a")! as any).getAttribute(
+              "href"
+            ),
+            title: (item.querySelector("span.title > a > h6 > strong")! as any)
+              .innerText,
+            downloadUrl: (
+              item.querySelector("a.waves-effect")! as any
+            ).getAttribute("href"),
           });
         });
         return results;
