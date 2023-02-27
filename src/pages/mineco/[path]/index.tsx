@@ -11,7 +11,7 @@ import {
   ListItemText,
 } from "@mui/material";
 
-export default function index({ publicItems = [] }) {
+export default function Index({ publicItems = [] }) {
   const { query, push } = useRouter();
 
   return (
