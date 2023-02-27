@@ -1,13 +1,14 @@
 import React from "react";
 import { useRouter } from "next/router";
+import { pageSelectorsMapping } from "@/utils/util-constants";
 import NavbarLayout from "@/components/layout/NavbarLayout";
 import {
   Paper,
   Grid,
-  ListItemButton,
-  ListItemText,
   List,
   ListItem,
+  ListItemButton,
+  ListItemText,
 } from "@mui/material";
 
 export default function index({ publicItems = [] }) {
@@ -29,19 +30,16 @@ export default function index({ publicItems = [] }) {
                     <ListItem disablePadding>
                       <ListItemButton
                         component="a"
-                        href={(item as any).downloadUrl}
+                        href={
+                          (item as any).url.startsWith("https://")
+                            ? (item as any).url
+                            : `${process.env.NEXT_PUBLIC_MINECO_BASE_URL}/${
+                                (item as any).url
+                              }`
+                        }
                         target="_blank"
                       >
                         <ListItemText primary="Descargar archivo" />
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                      <ListItemButton
-                        component="a"
-                        href={(item as any).url}
-                        target="_blank"
-                      >
-                        <ListItemText primary="Ver respuesta JSON en sitio web original" />
                       </ListItemButton>
                     </ListItem>
                   </List>
@@ -55,18 +53,18 @@ export default function index({ publicItems = [] }) {
   );
 }
 
-export async function getServerSideProps({ query: { path } }: any) {
+export async function getServerSideProps({ query }: any) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/public-finances-ministry/public-information`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/economy-ministry/public-information`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          category: path,
-          querySelector: "ul.collection > li.collection-item.avatar",
+          category: query.url,
+          querySelector: pageSelectorsMapping.default,
         }),
       }
     );
