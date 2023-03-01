@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import NavbarLayout from "@/components/layout/NavbarLayout";
 import {
@@ -10,8 +10,35 @@ import {
   ListItem,
 } from "@mui/material";
 
-export default function Index({ publicItems = [] }) {
+export default function Index() {
   const { query, push } = useRouter();
+  const [publicItems, setPublicItems] = useState([]);
+
+  useEffect(() => {
+    async function fetchPublicItems() {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/public-finances-ministry/public-information`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: query.title,
+              category: query.path,
+              querySelector: "ul.collection > li.collection-item.avatar",
+            }),
+          }
+        );
+        const parsedResponse = await res.json();
+        setPublicItems(parsedResponse);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchPublicItems();
+  }, []);
 
   return (
     <NavbarLayout showHomeIcon>
@@ -53,31 +80,4 @@ export default function Index({ publicItems = [] }) {
       </>
     </NavbarLayout>
   );
-}
-
-export async function getServerSideProps({ query: { path, title } }: any) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/public-finances-ministry/public-information`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: title,
-          category: path,
-          querySelector: "ul.collection > li.collection-item.avatar",
-        }),
-      }
-    );
-    const parsedResponse = await res.json();
-    return {
-      props: {
-        publicItems: parsedResponse,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-  }
 }
