@@ -1,11 +1,15 @@
 import NavbarLayout from "@/components/layout/NavbarLayout";
 import Mineco from "@/components/mineco/Mineco";
+import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export default function index() {
+export default function Index() {
   const [publicItems, setPublicItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     async function fetchPublicItems() {
+      setLoading(true);
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/economy-ministry/public-information`
@@ -19,12 +23,19 @@ export default function index() {
       } catch (error) {
         console.error(error);
       }
+      setLoading(false);
     }
     fetchPublicItems();
   }, []);
   return (
     <NavbarLayout showHomeIcon>
-      <Mineco publicItems={publicItems} />
+      {loading ? (
+        <div className="loader-container">
+          <CircularProgress />
+        </div>
+      ) : (
+        <Mineco publicItems={publicItems} />
+      )}
     </NavbarLayout>
   );
 }

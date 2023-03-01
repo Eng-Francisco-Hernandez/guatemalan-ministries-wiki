@@ -8,14 +8,18 @@ import {
   ListItemText,
   List,
   ListItem,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 
 export default function Index() {
   const { query, push } = useRouter();
   const [publicItems, setPublicItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchPublicItems() {
+      setLoading(true);
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/public-finances-ministry/public-information`,
@@ -33,6 +37,7 @@ export default function Index() {
         );
         const parsedResponse = await res.json();
         setPublicItems(parsedResponse);
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -47,35 +52,41 @@ export default function Index() {
           {query.title}
         </Paper>
         <Grid container spacing={2}>
-          {publicItems.map((item, i) => {
-            return (
-              <Grid item xs={12} key={i}>
-                <Paper className="jumbotron-content" elevation={12}>
-                  <h5 style={{ margin: "10px" }}>{(item as any).title}</h5>
-                  <List disablePadding>
-                    <ListItem disablePadding>
-                      <ListItemButton
-                        component="a"
-                        href={(item as any).downloadUrl}
-                        target="_blank"
-                      >
-                        <ListItemText primary="Descargar archivo" />
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                      <ListItemButton
-                        component="a"
-                        href={(item as any).url}
-                        target="_blank"
-                      >
-                        <ListItemText primary="Ver respuesta JSON en sitio web original" />
-                      </ListItemButton>
-                    </ListItem>
-                  </List>
-                </Paper>
-              </Grid>
-            );
-          })}
+          {loading ? (
+            <div className="loader-container">
+              <CircularProgress />
+            </div>
+          ) : (
+            publicItems.map((item, i) => {
+              return (
+                <Grid item xs={12} key={i}>
+                  <Paper className="jumbotron-content" elevation={12}>
+                    <h5 style={{ margin: "10px" }}>{(item as any).title}</h5>
+                    <List disablePadding>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          component="a"
+                          href={(item as any).downloadUrl}
+                          target="_blank"
+                        >
+                          <ListItemText primary="Descargar archivo" />
+                        </ListItemButton>
+                      </ListItem>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          component="a"
+                          href={(item as any).url}
+                          target="_blank"
+                        >
+                          <ListItemText primary="Ver respuesta JSON en sitio web original" />
+                        </ListItemButton>
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
+              );
+            })
+          )}
         </Grid>
       </>
     </NavbarLayout>
