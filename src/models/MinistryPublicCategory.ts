@@ -13,6 +13,7 @@ const ministryPublicCategorySchema = new Schema(
     title: {
       type: String,
       trim: true,
+      unique: true
     },
   },
   {

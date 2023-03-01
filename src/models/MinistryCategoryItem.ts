@@ -6,6 +6,10 @@ const ministryCategoryItemSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "MinistryPublicCategory",
     },
+    parentMinistry: {
+      type: String,
+      trim: true,
+    },
     url: {
       type: String,
       trim: true,

@@ -15,11 +15,7 @@ export default function Index() {
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/economy-ministry/public-information`
         );
         const parsedResponse = await res.json();
-        setPublicItems(
-          parsedResponse.filter(
-            (item: any) => item.url !== null && !item.url.endsWith(".pdf")
-          )
-        );
+        setPublicItems(parsedResponse);
       } catch (error) {
         console.error(error);
       }

@@ -1,17 +1,9 @@
 import PublicFinancesMinistryClient from "./public-finances-ministry-client";
 import puppeteer from "puppeteer";
 import MinistryPublicCategory from "@/models/MinistryPublicCategory";
-import { Ministries } from "@/utils/util-constants/ministries";
-import MinistryCategoryItem from "@/models/MinistryCategoryItem";
 
 const publicInformation = {
   getPublicItems: async function (this: PublicFinancesMinistryClient) {
-    const ministryPublicItems = await MinistryPublicCategory.find({
-      ministry: Ministries.MINFIN,
-    });
-    if (ministryPublicItems.length) {
-      return ministryPublicItems;
-    }
     try {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
@@ -29,7 +21,6 @@ const publicInformation = {
         return results;
       });
       await browser.close();
-      await MinistryPublicCategory.insertMany(data);
       return data;
     } catch (error) {
       return error;
@@ -44,12 +35,6 @@ const publicInformation = {
     const linkedMinistryCategory = await MinistryPublicCategory.findOne({
       title: title,
     });
-    const ministryCategoryItems = await MinistryCategoryItem.find({
-      ministryCategory: linkedMinistryCategory._id,
-    });
-    if (ministryCategoryItems.length) {
-      return ministryCategoryItems;
-    }
     try {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
@@ -61,6 +46,7 @@ const publicInformation = {
           items.forEach((item) => {
             results.push({
               ministryCategory: linkedMinistryCategory._id,
+              parentMinistry: "MINFIN",
               url: (item.querySelector("span.title > a")! as any).getAttribute(
                 "href"
               ),
@@ -78,7 +64,6 @@ const publicInformation = {
         linkedMinistryCategory
       );
       await browser.close();
-      await MinistryCategoryItem.insertMany(data);
       return data;
     } catch (error) {
       console.log(error);
