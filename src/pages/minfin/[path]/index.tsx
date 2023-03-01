@@ -55,7 +55,7 @@ export default function Index({ publicItems = [] }) {
   );
 }
 
-export async function getServerSideProps({ query: { path } }: any) {
+export async function getServerSideProps({ query: { path, title } }: any) {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/public-finances-ministry/public-information`,
@@ -65,6 +65,7 @@ export async function getServerSideProps({ query: { path } }: any) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          title: title,
           category: path,
           querySelector: "ul.collection > li.collection-item.avatar",
         }),

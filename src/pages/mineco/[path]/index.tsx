@@ -63,6 +63,7 @@ export async function getServerSideProps({ query }: any) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          title: query.title,
           category: query.url,
           querySelector: pageSelectorsMapping.default,
         }),

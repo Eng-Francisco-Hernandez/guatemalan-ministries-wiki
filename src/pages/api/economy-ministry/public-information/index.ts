@@ -1,5 +1,8 @@
 import { EconomyMinistryClient } from "@/public-information";
+import { connectToDb } from "@/utils/util-db";
 import type { NextApiRequest, NextApiResponse } from "next";
+
+connectToDb();
 
 const economyMinistryClient = new EconomyMinistryClient();
 
@@ -23,6 +26,7 @@ export default async function handler(
       try {
         const categoryInformation =
           await economyMinistryClient.getCategoryInformation(
+            body.title,
             body.category,
             body.querySelector
           );
