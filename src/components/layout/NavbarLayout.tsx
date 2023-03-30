@@ -39,6 +39,7 @@ export default function NavbarLayout(props: NavbarLayoutProps) {
 
   const onEnter = async (e: any) => {
     if (e.key === "Enter") {
+      if(searchValue.trim() === '') return;
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/global`,
